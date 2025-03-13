@@ -29,7 +29,7 @@ max_length = st.slider("Max Length", min_value=50, max_value=500, value=200, ste
 generate_button = st.button("Generate")
 
 if generate_button and prompt:
-    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")  # Move to GPU if available
+    inputs = tokenizer(prompt, return_tensors="pt")  
     with torch.no_grad():
         outputs = model.generate(**inputs, max_length=max_length, temperature=temperature)
 
