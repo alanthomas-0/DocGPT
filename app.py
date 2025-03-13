@@ -3,11 +3,11 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Hugging Face model details
-MODEL_NAME = "your-huggingface-username/your-finetuned-model"  # Replace with your model
+MODEL_NAME = "Al-To1234/DocGPT"  # Replace with your model
 
 @st.cache_resource
 def load_model():
-    """Load fine-tuned LoRA model (No Unsloth needed)."""
+    
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME, torch_dtype=torch.float16, device_map="auto"
@@ -17,7 +17,7 @@ def load_model():
 # Load model and tokenizer
 model, tokenizer = load_model()
 
-st.title("Fine-Tuned LLM Web App")
+st.title("DocGPT")
 st.write("Enter a prompt, and the model will generate a response.")
 
 # User input
