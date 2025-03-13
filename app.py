@@ -1,5 +1,5 @@
-python -m pip install torch
-python -m pip install unsloth
+python -m pip3 install torch
+python -m pip3 install unsloth
 import streamlit as st
 import torch
 from transformers import AutoTokenizer
