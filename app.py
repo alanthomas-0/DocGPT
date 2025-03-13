@@ -1,27 +1,25 @@
 import streamlit as st
 import torch
-from transformers import AutoTokenizer
-import unsloth
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Hugging Face model details
-MODEL_NAME = "Al-To1234/DocGPT"  # Replace with your actual model path
+MODEL_NAME = "your-huggingface-username/your-finetuned-model"  # Replace with your model
 
 @st.cache_resource
 def load_model():
-    """Load the fine-tuned LoRA model using Unsloth."""
-    model, tokenizer = unsloth.load_model(
-        MODEL_NAME,
-        max_seq_length=4096,  # Adjust based on your model's training
-        dtype=torch.float16,   # Efficient inference
-        load_in_4bit=True,     # Use 4-bit quantization (optional)
+    """Load fine-tuned LoRA model (No Unsloth needed)."""
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_NAME, torch_dtype=torch.float16, device_map="auto"
     )
     return model, tokenizer
 
 # Load model and tokenizer
 model, tokenizer = load_model()
 
-st.title("DocGPT")
-st.write("Ask anything")
+st.title("Fine-Tuned LLM Web App")
+st.write("Enter a prompt, and the model will generate a response.")
+
 # User input
 prompt = st.text_area("Enter your prompt:")
 
@@ -33,4 +31,8 @@ generate_button = st.button("Generate")
 if generate_button and prompt:
     inputs = tokenizer(prompt, return_tensors="pt").to("cuda")  # Move to GPU if available
     with torch.no_grad():
-        outputs = model
+        outputs = model.generate(**inputs, max_length=max_length, temperature=temperature)
+
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    st.subheader("Model Response:")
+    st.write(response)
